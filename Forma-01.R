@@ -138,6 +138,13 @@ print(post_hoc)
 
 # Pregunta 2
 
+# Se cargan los datos
+datosP2 <- read.csv2(file.choose(),header=TRUE)
+
+set.seed(21)
+n = 400
+datosP2 <- datosP2%>%sample_n(n, replace = FALSE)
+datosP2 <- c(datosP2$Presicion, datosP2$eficiencia)
 
 # Pregunta 3
 # La Universidad de Santiago de Chile consta con una gran cantidad de alumnos, 
