@@ -67,15 +67,6 @@ g <- g + rremove ("y.ticks") + rremove ("y.text")
 g <- g + rremove ("axis.title")
 print (g)
 
-cat("\n\ nProcedimiento ANOVA usando ezANOVA \n\n")
-prueba <- ezANOVA(data = new_datos,
-                   dv = eval_instructor,
-                   between = division,
-                   wid = instancia,
-                   return_aov = TRUE)
-
-print(prueba)
-
 # Prueba de homocedasticidad
 leveneTest(y = new_datos$eval_instructor, group = new_datos$division, center = "median")
 # H0: Las varianzas de las muestras son iguales.
@@ -84,6 +75,25 @@ leveneTest(y = new_datos$eval_instructor, group = new_datos$division, center = "
 # Al ser realizada la prueba de Levene para la homogeneidad de Varianzas, se obtiene
 # un p= 0.5035376, mucho mayor al nivel de significancia de 0.025 por lo que se puede concluir
 # con un 97,5% de confianza que las varianzas de las muestras son iguales.
+
+
+# Se verifican las condiciones para utilizar ANOVA:
+
+# - Se puede suponer que las muestras son obtenidas de manera aleatoria e independiente.
+# - La escala con la que se mide "eval_instructor" es numérica.
+# - Se puede suponer razonablemente que la población sigue una distribución
+#   normal, como se puede observar por medio del gráfico Q-Q, donde nos e encontraron valores atípicos
+# - Las muestras tienen varianzas aproximadamente iguales, esto se comprueba con la 
+#   función leveneTest() la cual realiza la prueba de homocedasticidad.
+
+cat("\n\ nProcedimiento ANOVA usando ezANOVA \n\n")
+prueba <- ezANOVA(data = new_datos,
+                   dv = eval_instructor,
+                   between = division,
+                   wid = instancia,
+                   return_aov = TRUE)
+
+print(prueba)
 
 cat("Procedimiento ANOVA usando aov\n\n")
 prueba2 <- aov(eval_instructor ~ division, data = new_datos)
