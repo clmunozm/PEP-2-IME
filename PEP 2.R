@@ -6,7 +6,7 @@
 # Librerías
 require (dplyr)
 
-
+# Pregunta 1
 # Lord Vader desea saber si los niveles de exigencia con que los instructores de las diferentes divisiones
 # evalúan a los nuevos soldados son similares, por lo que le ha solicitado estudiar si existen diferencias significativas en el
 # promedio de la evaluación realizada por el instructor entre las distintas divisiones. El Lord Sith ha sido muy claro al
@@ -20,6 +20,15 @@ datos2<- datos %>% group_by(division) %>%
 
 # Se Establece un nivel de significación
 alfa <- 0.025
+
+
+# Formulación de Hipótesis.
+# H0: No existen diferencias significativas en el promedio de la evaluación realizadas por intructor 
+# en las distintas divisiones
+
+# HA: Existen diferencias significativas en el promedio de la evaluación realizadas por intructor 
+# en las distintas divisiones
+
 
 cavetrooper <- datos[datos$division=="Cavetrooper", "eval_instructor"]
 snowtrooper <- datos[datos$division=="Snowtrooper", "eval_instructor"]
@@ -49,7 +58,8 @@ new_datos <- new_datos %>% pivot_longer(c("Cavetrooper", "Snowtrooper",
 new_datos[["division"]] <- factor(new_datos[["division"]])
 
 new_datos[["instancia"]] <- factor(1:nrow(new_datos))
-# ComprobaciÃ³n de normalidad mediante un grafico Q-Q
+
+# Comprobación de normalidad mediante un grafico Q-Q
 g <- ggqqplot(new_datos , x = "eval_instructor", y = "division", color = "division")
 g <- g + facet_wrap (~ division)
 g <- g + rremove ("x.ticks") + rremove ("x.text")
@@ -72,7 +82,7 @@ leveneTest(y = new_datos$eval_instructor, group = new_datos$division, center = "
 # HA: Al menos una de las muestras tiene varianza diferente a alguna de las demás.
 
 # Al ser realizada la prueba de Levene para la homogeneidad de Varianzas, se obtiene
-# un p= 0.5035376, mucho mayor al nivel de significación por lo que se puede concluir
+# un p= 0.5035376, mucho mayor al nivel de significancia de 0.025 por lo que se puede concluir
 # con un 97,5% de confianza que las varianzas de las muestras son iguales.
 
 cat("Procedimiento ANOVA usando aov\n\n")
@@ -90,6 +100,16 @@ g2 <- ezPlot(data = new_datos,
 
 print(g2)
 
+# Conclusión prueba Anova
+# Al obtener un valor p de 2.576e-107, muy inferior a un nivel de significancia de 0.025
+# se rechaza la hipótesis nula en favor de la alternativa, concluyendo así que
+# al menos una de las divisiones presenta un promedio de evaluación por parte del instructor
+# con una diferencia significativa en relación con las demas divisiones. Esto además
+# se puede ver en el gráfico del tamaño del efecto.
+
+
+
+# Prueba Post-Hoc
 
 post_hoc <- TukeyHSD(prueba2,
                      "division",
@@ -98,4 +118,29 @@ post_hoc <- TukeyHSD(prueba2,
 
 print(post_hoc)
 
+# Conclusión prueba Post Hoc
+# Como se pudo ver en los resultados de la prueba post-hoc, los valores p
+# asociados a las diferencias de cada una de las evaluaciones de los troopers, 
+# solo las diferencias de los troopers correspondientes a Cavetrooper y Spacetroopers
+# presentaron un valor p menor a un nivel de significancia de 0.025, por lo que
+# es posible concluir que los troopers de las divisiones Cavetroopers y Spacestroopers
+# poseen diferencias significativas en el promedio de las evaluaciones realizadas por el instructor
+
+# Pregunta 2
+
+
+# Pregunta 3
+# La Universidad de Santiago de Chile consta con una gran cantidad de alumnos, 
+# al encontrarse todas las carreras en el mismo espacio existen diversas opiniones 
+# y creencias respecto a la vuelta a la normalidad, la presencialidad en tiempos de 
+# covid es un tema de que hablar y cada estudiante tiene su opinión respecto a cada 
+# ambito del que hacer en la universidad de forma presencial. El siguiente estudio 
+# pretende determinar si existe diferencia en como es de necesario volver a realizar 
+# distintas actividades de forma presencial. Para ello, se seleccionaron a 10 alumnos  
+# de distintas carreras y facultades  respondiendo del 1 al 5 (siendo 1 para nada 
+# necesario, 2 poco necesario, 3 indiferente, 4 necesario y 5 muy necesario ) ir de 
+# forma presencial a: "rendir evaluaciones", "clases presenciales" y "ir al foro".
+
+# H0: Las actividades presenciales tienen preferencias similares por parte de los alumnos
+# H1: Al menos una actividad presencial tiene una preferencia distinta a las demás por parte de los alumnos
 
