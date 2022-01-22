@@ -3,9 +3,13 @@
 # David Morales P. (19.881.480-6)
 # Claudio Muñoz M. (20.003.395-7)
 
-# Librerías
+# Libreríaslibrary
+library (ggpubr)
+library (ez)
+library (car)
 require (dplyr)
-
+require(ggpubr)
+library(tidyverse)
 # Pregunta 1
 # Lord Vader desea saber si los niveles de exigencia con que los instructores de las diferentes divisiones
 # evalúan a los nuevos soldados son similares, por lo que le ha solicitado estudiar si existen diferencias significativas en el
@@ -144,7 +148,18 @@ datosP2 <- read.csv2(file.choose(),header=TRUE)
 set.seed(21)
 n = 400
 datosP2 <- datosP2%>%sample_n(n, replace = FALSE)
-datosP2 <- c(datosP2$Presicion, datosP2$eficiencia)
+
+# N = 0, S = 1.
+datosP2 <- mutate(datosP2, es_clon= as.integer(es_clon== "S"))
+
+datos_num <- as.data.frame(apply(datosP2, 2, as.numeric))
+correlacion <- round(cor(datos_num, datosP2$es_clon),2 )
+print(correlacion)
+
+# Se seleccionan los predictores de velocidad, imc y peso.
+predictores <- c("velociadad", "imc", "peso")
+
+
 
 # Pregunta 3
 # La Universidad de Santiago de Chile consta con una gran cantidad de alumnos, 
